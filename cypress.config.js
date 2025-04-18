@@ -3,9 +3,6 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   e2e: {
     baseUrl: 'https://prozorro.gov.ua/en/',
-    setupNodeEvents(on, config) {
-      // Set up event listeners if necessary
-    },
     viewportWidth: 1280,
     viewportHeight: 720,
     defaultCommandTimeout: 10000,
