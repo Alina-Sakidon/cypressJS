@@ -9,7 +9,7 @@ class RegistrationPage extends BasePage {
     this.lastNameField = '#signupLastName';
     this.emailField = '#signupEmail';
     this.passwordField = '#signupPassword';
-    this.reEnterPasswordField = '#signupRePassword';
+    this.reEnterPasswordField = '#signupRepeatPassword';
     this.signUpSubmitButton = '//button[contains(text(), "Register")]';
   }
 
@@ -29,7 +29,7 @@ class RegistrationPage extends BasePage {
   };
 
   fillPassword(password) {
-    cy.get(this.passwordField).type(password);
+    cy.get(this.passwordField).clear().type(password);
     return this;
   };
 
@@ -52,11 +52,22 @@ class RegistrationPage extends BasePage {
       .fillReEnterPassword(reEnterPassword);
   }
 
-  validateFieldError(field, errorMessage) {
+  validateFieldError(field, isValid = false, errorMessages = []) {
+    const borderColor = isValid ? 'rgb(206, 212, 218)' : 'rgb(220, 53, 69)';
+    const classAssertion = isValid ? 'not.have.class' : 'have.class';
+  
     cy.get(field)
-      .should('have.class', 'is-invalid')
-      .and('have.css', 'border-color', 'rgb(220, 53, 69)');
-    cy.contains(errorMessage).should('be.visible');
+      .should(classAssertion, 'is-invalid')
+      .and('have.css', 'border-color', borderColor);
+  
+    // Проверяем ошибки только если они переданы
+    (Array.isArray(errorMessages) ? errorMessages : [errorMessages])
+      .filter(Boolean) // удалит null/undefined/пустые
+      .forEach(errorMessage => {
+        cy.contains(errorMessage).should(isValid ? 'not.be.visible' : 'be.visible');
+      });
+  
+    return this;
   }
 
   clickFieldAndBlur(field) {
