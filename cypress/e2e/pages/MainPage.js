@@ -7,6 +7,7 @@ class MainPage extends BasePage {
         this.myProfileButton = '#userNavDropdown';
         this.userDropdownMenu = '.user-nav_menu.dropdown-menu';
         this.profileLink = 'a[routerlink="/panel/profile"]';
+        this.logoutButton = '//button[text()="Logout"]';
     }
 
     visit() {
@@ -16,6 +17,12 @@ class MainPage extends BasePage {
 
     clickSignUpButton() {
         cy.get(this.signUpButton).click();
+    }
+
+    logout() {
+        cy.xpath(this.logoutButton).click();
+        cy.get(this.myProfileButton).should('not.exist');
+        return this;
     }
 
     openUserDropdown() {

@@ -14,14 +14,11 @@ describe('Registration Form Validation', () => {
     });
 
     it('Should register new user', () => {
-        const user = User.generateRandomUser({
-            firstName: 'Alina',
-            lastName: 'Sakidon',
-            emailPrefix: 'alinas',
-            password: 'JavaScript123',
-        });
+        const user = User.generateRandomUser();
+
         registration.fillForm(user).clickSignUpSubmitButton();
         mainPage.openUserDropdown().goToProfile();
+
         profilePage.getProfileName().should('contain', `${user.firstName} ${user.lastName}`);
     })
 

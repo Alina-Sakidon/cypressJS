@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 class User {
   constructor(firstName, lastName, email, password) {
     this.firstName = firstName;
@@ -6,14 +7,15 @@ class User {
     this.password = password;
   }
 
-  static generateRandomUser({
-    firstName = 'Test',
-    lastName = 'User',
-    emailPrefix = 'usertest',
-    password = 'Password123',
-  } = {}) {
-    const random = Math.floor(Math.random() * 10000);
-    const email = `${emailPrefix}${random}@gmail.com`;
+  static generateRandomUser(password = 'Password123') {
+    const firstName = faker.person.firstName().replace(/[^a-zA-Z]/g, '').substring(0, 8);
+    const lastName = faker.person.lastName().replace(/[^a-zA-Z]/g, '').substring(0, 8);
+    
+    const email = faker.internet.email({
+      firstName,
+      lastName,
+      provider: 'example.com',
+    }).toLowerCase();
 
     return new User(firstName, lastName, email, password);
   }
