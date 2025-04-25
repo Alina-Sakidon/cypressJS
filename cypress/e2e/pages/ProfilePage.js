@@ -1,6 +1,6 @@
-import MainPage from './MainPage';
+import BasePage from './BasePage';
 
-class ProfilePage extends MainPage {
+class ProfilePage extends BasePage {
     constructor() {
         super();
         this.profileName = '.profile_name';

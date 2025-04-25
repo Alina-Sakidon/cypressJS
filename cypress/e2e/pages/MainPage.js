@@ -4,6 +4,7 @@ class MainPage extends BasePage {
     constructor() {
         super();
         this.signUpButton = '.btn-primary';
+        this.signInButton = 'button.header_signin';
         this.myProfileButton = '#userNavDropdown';
         this.userDropdownMenu = '.user-nav_menu.dropdown-menu';
         this.profileLink = 'a[routerlink="/panel/profile"]';
@@ -17,6 +18,11 @@ class MainPage extends BasePage {
 
     clickSignUpButton() {
         cy.get(this.signUpButton).click();
+    }
+
+    clickSignInButton() {
+        cy.get(this.signInButton).click();
+        return this;
     }
 
     logout() {
