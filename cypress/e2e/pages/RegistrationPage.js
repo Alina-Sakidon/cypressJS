@@ -43,13 +43,13 @@ class RegistrationPage extends BasePage {
     return this;
   }
 
-  fillForm(firstName, lastName, email, password, reEnterPassword) {
+  fillForm(user) {
     return this
-      .fillFirstName(firstName)
-      .fillLastName(lastName)
-      .fillEmail(email)
-      .fillPassword(password)
-      .fillReEnterPassword(reEnterPassword);
+      .fillFirstName(user.firstName)
+      .fillLastName(user.lastName)
+      .fillEmail(user.email)
+      .fillPassword(user.password)
+      .fillReEnterPassword(user.password);
   }
 
   validateFieldError(field, isValid = false, errorMessages = []) {

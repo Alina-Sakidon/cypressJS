@@ -1,14 +1,29 @@
-import MainPage from '../e2e/pages/MainPage';
-import RegistrationPage from '../e2e/pages/RegistrationPage';
+import MainPage from '../pages/MainPage';
+import RegistrationPage from '../pages/RegistrationPage';
+import User from '../../support/User';
+import ProfilePage from '../pages/ProfilePage';
 
 
 describe('Registration Form Validation', () => {
     const mainPage = new MainPage();
     const registration = new RegistrationPage();
+    const profilePage = new ProfilePage();
 
     beforeEach(() => {
         mainPage.visit().clickSignUpButton();
     });
+
+    it('Should register new user', () => {
+        const user = User.generateRandomUser({
+            firstName: 'Alina',
+            lastName: 'Sakidon',
+            emailPrefix: 'alinas',
+            password: 'JavaScript123',
+        });
+        registration.fillForm(user).clickSignUpSubmitButton();
+        mainPage.openUserDropdown().goToProfile();
+        profilePage.getProfileName().should('contain', `${user.firstName} ${user.lastName}`);
+    })
 
     it('Should show error if first name is empty', () => {
         registration.clickFieldAndBlur(registration.firstNameField)

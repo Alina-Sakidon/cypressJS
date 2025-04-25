@@ -2,17 +2,32 @@ import BasePage from './BasePage.js';
 
 class MainPage extends BasePage {
     constructor() {
-        super(); 
+        super();
         this.signUpButton = '.btn-primary';
+        this.myProfileButton = '#userNavDropdown';
+        this.userDropdownMenu = '.user-nav_menu.dropdown-menu';
+        this.profileLink = 'a[routerlink="/panel/profile"]';
     }
 
     visit() {
-        cy.visit(this.url); 
+        cy.visit(this.url);
         return this;
-      }
+    }
 
     clickSignUpButton() {
         cy.get(this.signUpButton).click();
+    }
+
+    openUserDropdown() {
+        cy.get(this.myProfileButton).click();
+        cy.get(this.userDropdownMenu)
+            .should('have.css', 'display', 'block');
+        return this;
+    }
+
+    goToProfile() {
+        cy.get(this.profileLink).click();
+        return this;
     }
 }
 
