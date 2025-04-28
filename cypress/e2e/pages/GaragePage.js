@@ -83,8 +83,9 @@ class GaragePage extends BasePage {
         const today = new Date().toLocaleDateString('en-GB').replace(/\//g, '.');
         const targetDate = lastUpdated ?? today;
         const fullName = `${brand} ${model}`;
-
-        return cy.get(this.carListItem).then($cars => {
+    
+        // Найти и кликнуть на нужный элемент
+        cy.get(this.carListItem).then($cars => {
             const matchedCar = [...$cars].reverse().find(car => {
                 const nameText = car.querySelector('.car_name')?.innerText.trim();
                 const updateText = car.querySelector('.car_update-mileage')?.innerText.trim();
@@ -93,11 +94,13 @@ class GaragePage extends BasePage {
                     updateText?.includes(`Update mileage • ${targetDate}`)
                 );
             });
-
+    
             expect(matchedCar, `Car ${fullName} with updated mileage on ${targetDate} found`).to.exist;
-            return cy.wrap(matchedCar).find('.car_add-expense').click();
+            cy.wrap(matchedCar).find('.car_add-expense').click();
         });
+        return this;
     }
+    
 
     addExpenseMileage(mileage) {
         cy.get(this.expenseMileageInput).clear().type(mileage);

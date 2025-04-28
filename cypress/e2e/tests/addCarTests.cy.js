@@ -7,7 +7,7 @@ describe('Add a car', () => {
     const garagePage = new GaragePage();
     const car = new Car('BMW', 'X5', 100);
 
-    before(() => {
+    beforeEach(() => {
         cy.loginFromEnv();
     })
 
@@ -16,14 +16,17 @@ describe('Add a car', () => {
             garagePage.addCar(car.brand, car.model, car.mileage)
                 .waitForCarListToLoad(lengthBefore);
 
-               garagePage.getCarListLength()
+            garagePage.getCarListLength()
                 .should('be.gt', lengthBefore);
+        })
+    });
 
-            garagePage.clickAddExpenseForCar(car.brand, car.model);
-            garagePage.addExpenseMileage('4000')
-                .addNumberOfLiters(10)
-                .addTotalCost(100)
-                .clickAddButton().validateAlertMessage('Fuel expense added')
-        });
-    })
+    it('Add an expenses', () => {
+        garagePage.clickAddExpenseForCar(car.brand, car.model)
+            .addExpenseMileage('4000')
+            .addNumberOfLiters(10)
+            .addTotalCost(100)
+            .clickAddButton()
+            .validateAlertMessage('Fuel expense added')
+    });
 })
