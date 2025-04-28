@@ -1,8 +1,9 @@
 import BasePage from "./BasePage";
 import { CarBrands } from '../../support/carData.js';
 import { CarModels } from '../../support/carData.js';
-import { selectOption, waitForElementToBeVisible } from "../../support/utils/actions";
+import { selectOption, selectOptionByText } from "../../support/utils/actions";
 import 'cypress-xpath';
+import { th } from "@faker-js/faker";
 
 
 class GaragePage extends BasePage {
@@ -12,19 +13,21 @@ class GaragePage extends BasePage {
         this.brandInput = '#addCarBrand';
         this.modelInput = '#addCarModel';
         this.mileageInput = '#addCarMileage';
-        this.addCarButton = '//button[text()="Add"]';
+        this.addButton = '//button[text()="Add"]';
         this.carList = '.car-list';
         this.carListItem = 'app-car';
+        this.numberOfLitersInput = '#addExpenseLiters';
+        this.totalCostInput = '#addExpenseTotalCost';
+        this.expenseMileageInput = '#addExpenseMileage';
     }
 
     addCar(brand, model, mileage) {
         cy.xpath(this.addCarButtonToGarage).click();
         selectOption(this.brandInput, CarBrands[brand]);
-        selectOption(this.modelInput, CarModels[model]);
-        cy.get(this.mileageInput).clear().type(mileage);
-        cy.xpath(this.addCarButton).should('exist').and('be.visible')
-            .and('not.be.disabled')
-            .click();
+        cy.get(this.modelInput).should('not.be.disabled')
+        selectOptionByText(this.modelInput, CarModels[model]);
+        this.enterMileage(mileage);
+        this.clickAddButton();
         return this;
     }
 
@@ -41,12 +44,25 @@ class GaragePage extends BasePage {
         selectOption(this.modelInput, model);
     }
 
-    selectMileage(mileage) {
+    enterMileage(mileage) {
         cy.get(this.mileageInput).clear().type(mileage);
+        return this;
     }
 
-    clickAddCarButton() {
-        cy.xpath(this.addCarButton).click();
+    clickAddButton() {
+        cy.xpath(this.addButton).should('exist').and('be.visible')
+            .and('not.be.disabled')
+            .click();
+        return this;
+    }
+
+    addNumberOfLiters(liters) {
+        cy.get(this.numberOfLitersInput).clear().type(liters);
+        return this;
+    }
+
+    addTotalCost(cost) {
+        cy.get(this.totalCostInput).clear().type(cost);
         return this;
     }
 
@@ -63,19 +79,39 @@ class GaragePage extends BasePage {
             .find(this.carListItem)
             .should('have.length.greaterThan', expectedMinLength);
     }
-    clickAddExpenseForCarByDate(lastUpdated = null) {
+    clickAddExpenseForCar(brand, model, lastUpdated = null) {
         const today = new Date().toLocaleDateString('en-GB').replace(/\//g, '.');
         const targetDate = lastUpdated ?? today;
-    
+        const fullName = `${brand} ${model}`;
+
         return cy.get(this.carListItem).then($cars => {
             const matchedCar = [...$cars].reverse().find(car => {
+                const nameText = car.querySelector('.car_name')?.innerText.trim();
                 const updateText = car.querySelector('.car_update-mileage')?.innerText.trim();
-                return updateText?.includes(`Update mileage • ${targetDate}`);
+                return (
+                    nameText === fullName &&
+                    updateText?.includes(`Update mileage • ${targetDate}`)
+                );
             });
-    
-            expect(matchedCar, `Car with updated mileage on ${targetDate} found`).to.exist;
+
+            expect(matchedCar, `Car ${fullName} with updated mileage on ${targetDate} found`).to.exist;
             return cy.wrap(matchedCar).find('.car_add-expense').click();
         });
+    }
+
+    addExpenseMileage(mileage) {
+        cy.get(this.expenseMileageInput).clear().type(mileage);
+        return this;
+    }
+
+    validateAlertMessage(expectedText) {
+        cy.xpath(this.addButton)
+            .should('exist')
+            .and('be.disabled');
+
+        return cy.get('app-alert-list p', { timeout: 5000 })
+            .should('be.visible')
+            .and('contain.text', expectedText);
     }
 }
 

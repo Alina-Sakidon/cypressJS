@@ -8,10 +8,6 @@ export const CarBrands = {
   };
   
   export const CarModels = {
-    TT: '0: 1',
-    R8: '1: 2',
-    Q7: '2: 3',
-    A6: '3: 4',
-    A8: '4: 5'
+    X5: 'X5'
   };
   

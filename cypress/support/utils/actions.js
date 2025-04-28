@@ -8,3 +8,16 @@ export function selectOption(selector, expectedValue) {
             }
         });
 }
+
+export function selectOptionByText(selector, expectedValue) {
+    cy.get(selector, { timeout: 10000 })
+        .should('be.visible');
+    cy.get(selector)
+        .find('option', { timeout: 5000 })
+        .each(($option) => {
+            const optionText = $option.text().trim();
+            if (optionText === expectedValue) {
+                cy.get(selector).select(optionText);
+            }
+        });
+}
