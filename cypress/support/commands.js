@@ -11,9 +11,9 @@ Cypress.Commands.add('login', (user) => {
 Cypress.Commands.add('loginFromEnv', () => {
     cy.visit(Cypress.env('baseUrl'));
     cy.get('button.header_signin').click();
-    cy.get('#username').type(Cypress.env('username'));
-    cy.get('#password').type(Cypress.env('password'));
-    cy.get('#login-button').click();
+    cy.get('#signinEmail').type(Cypress.env('username'));
+    cy.get('#signinPassword').type(Cypress.env('password'));
+    cy.contains('button', 'Login').click();
   });
 
 Cypress.Commands.overwrite('type', (originalFn, element, text, options) => {
