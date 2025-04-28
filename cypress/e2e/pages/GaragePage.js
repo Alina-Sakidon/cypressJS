@@ -56,13 +56,27 @@ class GaragePage extends BasePage {
 
     waitForCarListToLoad(expectedMinLength = 0) {
         cy.get(this.carList)
-          .should('be.visible')
-          .and('not.have.class', 'loading');
-    
+            .should('be.visible')
+            .and('not.have.class', 'loading');
+
         cy.get(this.carList)
-          .find(this.carListItem)
-          .should('have.length.greaterThan', expectedMinLength);
-      }     
+            .find(this.carListItem)
+            .should('have.length.greaterThan', expectedMinLength);
+    }
+    clickAddExpenseForCarByDate(lastUpdated = null) {
+        const today = new Date().toLocaleDateString('en-GB').replace(/\//g, '.');
+        const targetDate = lastUpdated ?? today;
+    
+        return cy.get(this.carListItem).then($cars => {
+            const matchedCar = [...$cars].reverse().find(car => {
+                const updateText = car.querySelector('.car_update-mileage')?.innerText.trim();
+                return updateText?.includes(`Update mileage • ${targetDate}`);
+            });
+    
+            expect(matchedCar, `Car with updated mileage on ${targetDate} found`).to.exist;
+            return cy.wrap(matchedCar).find('.car_add-expense').click();
+        });
+    }
 }
 
 export default GaragePage;
