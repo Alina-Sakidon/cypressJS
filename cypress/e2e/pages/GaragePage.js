@@ -84,7 +84,6 @@ class GaragePage extends BasePage {
         const targetDate = lastUpdated ?? today;
         const fullName = `${brand} ${model}`;
     
-        // Найти и кликнуть на нужный элемент
         cy.get(this.carListItem).then($cars => {
             const matchedCar = [...$cars].reverse().find(car => {
                 const nameText = car.querySelector('.car_name')?.innerText.trim();
