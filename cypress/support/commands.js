@@ -8,6 +8,14 @@ Cypress.Commands.add('login', (user) => {
     cy.contains('button', 'Login').click();
 });
 
+Cypress.Commands.add('loginFromEnv', () => {
+    cy.visit(Cypress.env('baseUrl'));
+    cy.get('button.header_signin').click();
+    cy.get('#signinEmail').type(Cypress.env('username'));
+    cy.get('#signinPassword').type(Cypress.env('password'));
+    cy.contains('button', 'Login').click();
+  });
+
 Cypress.Commands.overwrite('type', (originalFn, element, text, options) => {
     if (options && options.sensitive) {
       options.log = false;

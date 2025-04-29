@@ -4,8 +4,8 @@ class BasePage {
     this.url = 'https://guest:welcome2qauto@qauto.forstudy.space';
   }
 
-  visit() {
-    cy.visit(this.url);
+  visit(path = '/') {
+    cy.visit(Cypress.env('baseUrl') + path);
     return this;
   }
 }

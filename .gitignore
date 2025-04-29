@@ -6,6 +6,7 @@ node_modules/
 /cypress/videos/
 /cypress/fixtures/
 /cypress/results/
+cypress/report/*
 
 # Ignore Cypress config files
 /cypress.json
