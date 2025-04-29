@@ -6,6 +6,7 @@ describe('Add a car', () => {
 
     const garagePage = new GaragePage();
     const car = new Car('BMW', 'X5', 100);
+    const randomMileage = Math.floor(Math.random() * (99999 - 101 + 1)) + 101;
 
     beforeEach(() => {
         cy.loginFromEnv();
@@ -23,7 +24,7 @@ describe('Add a car', () => {
 
     it('Add an expenses', () => {
         garagePage.clickAddExpenseForCar(car.brand, car.model)
-            .addExpenseMileage('4000')
+            .addExpenseMileage(randomMileage.toString())
             .addNumberOfLiters(10)
             .addTotalCost(100)
             .clickAddButton()

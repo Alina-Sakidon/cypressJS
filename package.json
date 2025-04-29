@@ -10,8 +10,8 @@
     "mochawesome-merge": "^5.0.0"
   },
   "scripts": {
-    "test:qauto": "cp cypress.env.qauto.json cypress.env.json && npx cypress run",
-    "test:qauto2": "cp cypress.env.qauto2.json cypress.env.json && npx cypress run",
+    "test:qauto": "powershell -Command \"Copy-Item -Path cypress.env.qauto.json -Destination cypress.env.json -Force\" && npx cypress run",
+    "test:qauto2": "powershell -Command \"Copy-Item -Path cypress.env.qauto2.json -Destination cypress.env.json -Force\" && npx cypress run",
     "generate_report": "mochawesome-merge cypress/report/mochawesome-report/*.json > cypress/report/output.json",
     "margetReport_html": "mochawesome-report-generator cypress/report/output.json -o cypress/report/html"
   }
