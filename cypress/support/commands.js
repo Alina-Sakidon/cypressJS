@@ -27,3 +27,17 @@ Cypress.Commands.overwrite('type', (originalFn, element, text, options) => {
     }
     return originalFn(element, text, options);
   });
+
+  Cypress.Commands.add('loginViaApi', () => {
+    cy.request({
+      method: 'POST',
+      url: 'https://qauto.forstudy.space/api/auth/signin',
+      body: {
+        email: 'alinaS@gmail.com',
+        password: 'Qwerty123',
+       remember: true
+      },
+     
+      withCredentials: true
+    });
+  });
