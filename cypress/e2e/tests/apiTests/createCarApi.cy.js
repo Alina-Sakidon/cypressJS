@@ -61,7 +61,6 @@ describe('Add a car', () => {
 
   it('Create expenses for the created car', () => {
     cy.fixture('createdCar.json').then((carFromFixture) => {
-      cy.intercept('POST', '/api/expenses').as('createExpense');
       const expenseForApi = new Expense(
         carFromFixture.id,
         randomMileage + 10,
@@ -69,28 +68,14 @@ describe('Add a car', () => {
         10,
         Expense.getTodayAtMidnight()
       );
-      cy.log('Expense for API: ' + JSON.stringify(expenseForApi.toJSON()));
-
-      const expenseBody = expenseForApi.toJSON();
-      if (expenseBody.id == null) {
-        delete expenseBody.id;
-      }
-
-      cy.request({
-        method: 'POST',
-        url: '/api/expenses',
-        body: expenseBody,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      }).then((response) => {
+  
+      cy.createExpenseViaApi(expenseForApi).then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body.data).to.exist;
-
+  
         const createdExpenseFromApi = Expense.fromApiData(response.body.data);
         expect(expenseForApi.equalsApiData(createdExpenseFromApi)).to.be.true;
       });
     });
-  });
+  });  
 });
