@@ -1,6 +1,6 @@
 import GaragePage from '../../pages/GaragePage.js';
 import Car from '../../../support/Car.js';
-import { CarBrands, CarModels } from '../../../support/carData.js';
+import { CarModels } from '../../../support/carData.js';
 import '../../../support/commands.js';
 
 describe('Add a car', () => {
@@ -8,53 +8,53 @@ describe('Add a car', () => {
   const randomMileage = Math.floor(Math.random() * (99999 - 101 + 1)) + 101;
   const car = new Car('Ford', CarModels.FOCUS, randomMileage);
 
-
   beforeEach(() => {
-    cy.loginViaApi();
-  })
+    cy.loginAndVisitUI('/panel/garage');
+  });
 
-  it('Create a car and validate response', () => {
+
+  it('creates a car through UI and saves ID to fixture', () => {
     cy.intercept('POST', '/api/cars').as('createCar');
 
     garagePage.getCarListLength().then((lengthBefore) => {
       garagePage.addCar(car.brand, car.model, car.mileage)
         .waitForCarListToLoad(lengthBefore);
+      cy.wait('@createCar').then(({ response }) => {
+        expect(response.statusCode).to.eq(201);
+        const { id, createdAt } = response.body.data;
 
-      cy.wait('@createCar').then((interception) => {
-        expect(interception.response.statusCode).to.eq(201);
-        expect(interception.response.body).to.exist;
+        car.setId(id);
+        car.createdAt = createdAt;
 
-        console.log('Response body data:', interception.response.body.data); // Выводим тело
-        const carId = interception.response.body.data.id;
-        expect(carId).to.exist;
-        cy.wrap(carId).as('createdCarId');
+        cy.writeFile('cypress/fixtures/createdCar.json', {
+          id: car.id,
+          brand: car.brand,
+          model: car.model,
+          mileage: car.mileage,
+          createdAt: car.createdAt
+        });
       });
-
-    })
+    });
   });
 
-  it('Checking car list after creating a car', () =>
-    cy.get('@createdCarId').then((carId) => {
+  it('validates the created car via API using fixture', () => {
+
+    cy.fixture('createdCar.json').then((carFromFixture) => {
+      expect(carFromFixture.id, 'Car ID must exist').to.exist;
+
       cy.request({
         method: 'GET',
-        url: '/api/cars'
-        // headers: {
-        //   Authorization: `Bearer ${window.localStorage.getItem('authToken')}` // або використай свій метод отримання токену
-        // }
-      })
-        .then((response) => {
-          expect(response.status).to.eq(200);
-          expect(response.body).to.have.property('data');
+        url: '/api/cars',
+        withCredentials: true
+      }).then((res) => {
+        expect(res.status).to.eq(200);
+        const cars = res.body.data;
+        const createdCar = cars.find(c => c.id === carFromFixture.id);
 
-          const cars = response.body.data;
-
-          
-          const createdCar = cars.find(car => car.id === carId);
-          expect(createdCar).to.exist;
-          expect(createdCar.brand).to.eq(car.brand);
-          expect(createdCar.model).to.eq(car.model);
-          expect(createdCar.mileage).to.eq(car.mileage);
-        });
-    }));
-})
-
+        expect(createdCar).to.exist;
+        const carFromApi = Car.fromApiData(createdCar);
+        expect(car.equalsApiData(carFromApi)).to.be.true;
+      });
+    });
+  });
+});
