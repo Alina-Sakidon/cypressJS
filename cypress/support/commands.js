@@ -57,3 +57,21 @@ Cypress.Commands.add('loginAndVisitUI', (path) => {
     }
   });
 });
+
+Cypress.Commands.add('createExpenseViaApi', (expense) => {
+  const body = expense.toJSON();
+  if (body.id == null) {
+    delete body.id;
+  }
+
+  return cy.request({
+    method: 'POST',
+    url: '/api/expenses',
+    body,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    withCredentials: true
+  });
+});
+

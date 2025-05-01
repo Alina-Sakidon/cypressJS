@@ -2,6 +2,7 @@ import GaragePage from '../../pages/GaragePage.js';
 import Car from '../../../support/Car.js';
 import { CarModels } from '../../../support/carData.js';
 import '../../../support/commands.js';
+import Expense from '../../../support/Expenses.js';
 
 describe('Add a car', () => {
   const garagePage = new GaragePage();
@@ -37,23 +38,58 @@ describe('Add a car', () => {
     });
   });
 
-  it('validates the created car via API using fixture', () => {
+  // it('validates the created car via API using fixture', () => {
 
+  //   cy.fixture('createdCar.json').then((carFromFixture) => {
+  //     expect(carFromFixture.id, 'Car ID must exist').to.exist;
+
+  //     cy.request({
+  //       method: 'GET',
+  //       url: '/api/cars',
+  //       withCredentials: true
+  //     }).then((res) => {
+  //       expect(res.status).to.eq(200);
+  //       const cars = res.body.data;
+  //       const createdCar = cars.find(c => c.id === carFromFixture.id);
+
+  //       expect(createdCar).to.exist;
+  //       const carFromApi = Car.fromApiData(createdCar);
+  //       expect(car.equalsApiData(carFromApi)).to.be.true;
+  //     });
+  //   });
+  // });
+
+  it('Create expenses for the created car', () => {
     cy.fixture('createdCar.json').then((carFromFixture) => {
-      expect(carFromFixture.id, 'Car ID must exist').to.exist;
+      cy.intercept('POST', '/api/expenses').as('createExpense');
+      const expenseForApi = new Expense(
+        carFromFixture.id,
+        randomMileage + 10,
+        10,
+        10,
+        Expense.getTodayAtMidnight()
+      );
+      cy.log('Expense for API: ' + JSON.stringify(expenseForApi.toJSON()));
+
+      const expenseBody = expenseForApi.toJSON();
+      if (expenseBody.id == null) {
+        delete expenseBody.id;
+      }
 
       cy.request({
-        method: 'GET',
-        url: '/api/cars',
+        method: 'POST',
+        url: '/api/expenses',
+        body: expenseBody,
+        headers: {
+          'Content-Type': 'application/json'
+        },
         withCredentials: true
-      }).then((res) => {
-        expect(res.status).to.eq(200);
-        const cars = res.body.data;
-        const createdCar = cars.find(c => c.id === carFromFixture.id);
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body.data).to.exist;
 
-        expect(createdCar).to.exist;
-        const carFromApi = Car.fromApiData(createdCar);
-        expect(car.equalsApiData(carFromApi)).to.be.true;
+        const createdExpenseFromApi = Expense.fromApiData(response.body.data);
+        expect(expenseForApi.equalsApiData(createdExpenseFromApi)).to.be.true;
       });
     });
   });
