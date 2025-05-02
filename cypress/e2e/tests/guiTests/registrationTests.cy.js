@@ -1,7 +1,7 @@
-import MainPage from '../pages/MainPage';
-import RegistrationPage from '../pages/RegistrationPage';
-import User from '../../support/User';
-import ProfilePage from '../pages/ProfilePage';
+import MainPage from '../../pages/MainPage';
+import RegistrationPage from '../../pages/RegistrationPage';
+import User from '../../../support/User';
+import ProfilePage from '../../pages/ProfilePage';
 
 
 describe('Registration Form Validation', () => {

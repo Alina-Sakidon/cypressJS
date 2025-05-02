@@ -8,6 +8,7 @@ export const CarBrands = {
   };
   
   export const CarModels = {
-    X5: 'X5'
+    X5: 'X5',
+    FOCUS: 'Focus'
   };
   

@@ -1,6 +1,6 @@
-import '../../support/commands.js';
-import GaragePage from '../pages/GaragePage.js';
-import Car from '../../support/Car.js';
+import '../../../support/commands.js';
+import GaragePage from '../../pages/GaragePage.js';
+import Car from '../../../support/Car.js';
 
 describe('Add a car', () => {
 

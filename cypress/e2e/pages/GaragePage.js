@@ -1,6 +1,5 @@
 import BasePage from "./BasePage";
-import { CarBrands } from '../../support/carData.js';
-import { CarModels } from '../../support/carData.js';
+import { CarBrands,CarModels } from '../../support/carData.js';
 import { selectOption, selectOptionByText } from "../../support/utils/actions";
 import 'cypress-xpath';
 import { th } from "@faker-js/faker";
@@ -22,10 +21,11 @@ class GaragePage extends BasePage {
     }
 
     addCar(brand, model, mileage) {
-        cy.xpath(this.addCarButtonToGarage).click();
+        cy.log('Adding car with brand: ${brand}, model: ${model}, mileage: ${mileage}');
+        cy.xpath(this.addCarButtonToGarage).should('exist').and('be.visible').click();
         selectOption(this.brandInput, CarBrands[brand]);
-        cy.get(this.modelInput).should('not.be.disabled')
-        selectOptionByText(this.modelInput, CarModels[model]);
+        cy.get(this.modelInput).should('not.be.disabled');
+        selectOptionByText(this.modelInput, model);
         this.enterMileage(mileage);
         this.clickAddButton();
         return this;

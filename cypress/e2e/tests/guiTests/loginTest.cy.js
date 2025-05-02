@@ -1,8 +1,8 @@
-import MainPage from '../pages/MainPage';
-import RegistrationPage from '../pages/RegistrationPage';
-import ProfilePage from '../pages/ProfilePage';
-import User from '../../support/User';
-import LoginPage from '../pages/LoginPage';
+import MainPage from '../../pages/MainPage';
+import RegistrationPage from '../../pages/RegistrationPage';
+import ProfilePage from '../../pages/ProfilePage';
+import User from '../../../support/User';
+import LoginPage from '../../pages/LoginPage';
 
 describe('Login Test', () => {
     const mainPage = new MainPage();
