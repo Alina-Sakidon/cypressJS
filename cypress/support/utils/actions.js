@@ -25,3 +25,11 @@ export function selectOptionByText(selector, expectedText) {
         cy.wrap($select).select(expectedText);
       });
   }
+
+  export function navigateToPageWithText(path, linkText) {
+    cy.contains(`a[href="${path}"]`, linkText)
+      .should('be.visible')
+      .click();
+  
+    cy.url().should('include', path);
+  }
