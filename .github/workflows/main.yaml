@@ -25,6 +25,13 @@ jobs:
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
 
+      - name: Ensure report directory exists
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/e2e \
+            cypress_tests_image \
+            mkdir -p cypress/report
+
       - name: Merge Mochawesome JSON reports
         run: |
           docker run --rm \
