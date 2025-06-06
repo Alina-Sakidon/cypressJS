@@ -10,3 +10,5 @@ COPY . .
 RUN apt-get update && apt-get install -y xvfb
 
 RUN npx cypress verify
+
+CMD ["npx", "cypress", "run"]
