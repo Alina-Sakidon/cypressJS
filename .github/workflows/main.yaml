@@ -19,8 +19,5 @@ jobs:
       - name: Build Docker image
         run: docker build -t cypress_tests_image .
 
-      - name: Run Cypress tests (uses CMD from Dockerfile)
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/e2e \
-            cypress_tests_image
+      - name: Run Cypress tests
+        run: docker run --rm cypress_tests_image
