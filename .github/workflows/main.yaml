@@ -25,6 +25,13 @@ jobs:
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
 
+      - name: Merge Mochawesome JSON reports
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/e2e \
+            cypress_tests_image \
+            npm run generate_report
+
       - name: Generate HTML report
         run: |
           docker run --rm \
