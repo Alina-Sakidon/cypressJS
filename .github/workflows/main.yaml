@@ -19,9 +19,8 @@ jobs:
       - name: Build Docker image
         run: docker build -t cypress_tests_image .
 
-      - name: Run Cypress tests inside Docker
+      - name: Run Cypress tests inside Docker (use CMD from Dockerfile)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
-            cypress_tests_image \
-            npx cypress@10.11.0 run --browser firefox --headless --spec "cypress/e2e/tests/guiTests/*.cy.js"
+            cypress_tests_image
