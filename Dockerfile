@@ -1,16 +1,12 @@
-FROM cypress/browsers:node-22.16.0-chrome-136.0.7103.113-1-ff-139.0.1-edge-136.0.3240.76-1
+FROM mcr.microsoft.com/playwright:focal
 
-WORKDIR /e2e/tests/guiTests
+WORKDIR /tests
 
 COPY package*.json ./
-
-RUN npm install --include=dev
+RUN npm install
 
 COPY . .
 
-RUN apt-get update && apt-get install -y xvfb
+RUN npx playwright install --with-deps
 
-RUN npx cypress verify
-
-CMD ["npx", "cypress", "run", "--spec", "cypress/e2e/tests/guiTests/**/*.cy.js"]
-
+CMD ["npx", "playwright", "test", "tests/registrationForm.spec.ts"]
