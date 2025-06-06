@@ -1,4 +1,5 @@
 const { defineConfig } = require("cypress");
+const webpack = require('@cypress/webpack-preprocessor');
 
 module.exports = defineConfig({
   e2e: {
@@ -22,6 +23,34 @@ module.exports = defineConfig({
     env: {
       username: 'testuser',
       password: 'testpassword',
+    },
+
+    setupNodeEvents(on, config) {
+      const options = {
+        webpackOptions: {
+          resolve: {
+            extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          },
+          module: {
+            rules: [
+              {
+                test: /\.m?js$/,
+                exclude: /(node_modules)/,
+                use: {
+                  loader: 'babel-loader',
+                  options: {
+                    presets: ['@babel/preset-env'],
+                    plugins: ['@babel/plugin-transform-modules-commonjs'],
+                  },
+                },
+              },
+            ],
+          },
+          mode: 'development',
+        },
+      };
+      on('file:preprocessor', webpack(options));
+      return config;
     },
   },
 });
