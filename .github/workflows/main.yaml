@@ -25,12 +25,12 @@ jobs:
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
 
-      - name: Generate HTML report (inside Docker)
+      - name: Generate HTML report (install devDeps inside container)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image \
-            npm run margetReport_html
+            sh -c "npm install --include=dev && npm run margetReport_html"
 
       - name: Upload Mochawesome JSON Report
         uses: actions/upload-artifact@v4
