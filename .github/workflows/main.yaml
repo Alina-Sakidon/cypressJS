@@ -3,7 +3,7 @@ name: Cypress Tests in Docker
 on:
   push:
     branches:
-      - main
+      - homeWork31
   pull_request:
     branches:
       - main
