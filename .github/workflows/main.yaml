@@ -19,18 +19,18 @@ jobs:
       - name: Build Docker image
         run: docker build -t cypress_tests_image .
 
-      - name: Run Cypress tests inside Docker (use CMD from Dockerfile)
+      - name: Run Cypress tests (uses CMD from Dockerfile)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
 
-      - name: Generate HTML report (install devDeps inside container)
+      - name: Generate HTML report
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image \
-            sh -c "npm install --include=dev && npm run margetReport_html"
+            npm run margetReport_html
 
       - name: Upload Mochawesome JSON Report
         uses: actions/upload-artifact@v4
