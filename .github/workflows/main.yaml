@@ -3,7 +3,7 @@ name: Cypress Tests in Docker
 on:
   push:
     branches:
-      - homeWork31
+      - main
   pull_request:
     branches:
       - main
@@ -24,3 +24,22 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
+
+      - name: Generate HTML report (inside Docker)
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/e2e \
+            cypress_tests_image \
+            npm run margetReport_html
+
+      - name: Upload Mochawesome JSON Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-json
+          path: cypress/report/mochawesome-report/
+
+      - name: Upload Mochawesome HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochawesome-html
+          path: cypress/report/html/
