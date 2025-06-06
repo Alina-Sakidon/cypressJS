@@ -7,6 +7,6 @@ RUN npm install --include=dev
 
 COPY . .
 
-RUN npx cypress verify
-
 RUN apt-get update && apt-get install -y xvfb
+
+RUN npx cypress verify
