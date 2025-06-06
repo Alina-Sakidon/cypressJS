@@ -1,4 +1,4 @@
-name: Cypress Tests in Docker
+name: Cypress Tests in Docker (Debug Mode)
 
 on:
   push:
@@ -17,18 +17,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker image for Cypress tests
+      - name: Build Cypress Docker image
         run: |
-          docker build \
-            -t cypress-tests-firefox \
-            --build-arg CYPRESS_BASE_IMAGE=cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1 \
-            .
+          docker build -t cypress-tests-firefox .
 
-      - name: Run Cypress tests in Docker container
+      - name: Run Cypress tests (headless Firefox)
         run: |
           docker run --rm \
             --name cypress_tests_firefox \
             -v ${{ github.workspace }}:/e2e \
             -w /e2e \
             cypress-tests-firefox \
-            xvfb-run -a npx cypress run --browser firefox --headless --spec "cypress/e2e/tests/guiTests/*.cy.js"
+            npx cypress run \
+              --browser firefox \
+              --headless \
+              --spec "cypress/e2e/tests/guiTests/*.cy.js" \
+              --config video=false \
+              --reporter spec
