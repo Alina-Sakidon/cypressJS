@@ -1,4 +1,4 @@
-name: Cypress Tests in Docker (Debug Mode)
+name: Cypress Tests in Docker
 
 on:
   push:
@@ -21,16 +21,6 @@ jobs:
         run: |
           docker build -t cypress-tests-firefox .
 
-      - name: Run Cypress tests (headless Firefox)
+      - name: Run Cypress tests in Docker container
         run: |
-          docker run --rm \
-            --name cypress_tests_firefox \
-            -v ${{ github.workspace }}:/e2e \
-            -w /e2e \
-            cypress-tests-firefox \
-            npx cypress run \
-              --browser firefox \
-              --headless \
-              --spec "cypress/e2e/tests/guiTests/*.cy.js" \
-              --config video=false \
-              --reporter spec
+          docker run --rm cypress-tests-firefox

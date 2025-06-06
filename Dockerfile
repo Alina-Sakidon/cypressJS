@@ -8,8 +8,6 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN npm install cypress@10.11.0
-
 COPY . .
 
 RUN rm -f /etc/apt/sources.list.d/microsoft-edge*.list && \
