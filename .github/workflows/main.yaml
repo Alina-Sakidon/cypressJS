@@ -30,7 +30,7 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image \
-            npm run margetReport_html
+            npx mochawesome-report-generator cypress/report/output.json -o cypress/report/html
 
       - name: Upload Mochawesome JSON Report
         uses: actions/upload-artifact@v4
