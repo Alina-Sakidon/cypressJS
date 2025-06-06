@@ -33,13 +33,13 @@ jobs:
             npm run margetReport_html
 
       - name: Upload Mochawesome JSON Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mochawesome-json
           path: cypress/report/mochawesome-report/
 
       - name: Upload Mochawesome HTML Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mochawesome-html
           path: cypress/report/html/
