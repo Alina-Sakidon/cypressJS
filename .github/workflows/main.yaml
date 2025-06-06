@@ -25,32 +25,25 @@ jobs:
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image
 
-      - name: Ensure report directory exists
-        run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/e2e \
-            cypress_tests_image \
-            mkdir -p cypress/report
-
       - name: Merge Mochawesome JSON reports
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image \
-            npm run generate_report
+            sh -c "npx mochawesome-merge cypress/report/mochawesome-report/*.json > cypress/report/output.json"
 
       - name: Generate HTML report
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             cypress_tests_image \
-            npm run margetReport_html
+            npx mochawesome-report-generator cypress/report/output.json -o cypress/report/html
 
       - name: Upload Mochawesome JSON Report
         uses: actions/upload-artifact@v4
         with:
           name: mochawesome-json
-          path: cypress/report/mochawesome-report/
+          path: cypress/report/output.json
 
       - name: Upload Mochawesome HTML Report
         uses: actions/upload-artifact@v4
